@@ -1,10 +1,12 @@
 from nasa.exception import SensorException
 from nasa.logger import logging
 import sys
-from nasa.entity.config_entity import TrainingPipelineConfig, DataIngestionConfig, DataValidationConfig
-from nasa.entity.artifact_entity import DataIngestionArtifact
+from nasa.entity.config_entity import TrainingPipelineConfig, DataIngestionConfig, DataValidationConfig, DataTransformationConfig, ModelTrainerConfig
+from nasa.entity.artifact_entity import DataIngestionArtifact, DataValidationArtifact, DataTransformationArtifact
 from nasa.componenets.data_ingestion import DataIngestion
 from nasa.componenets.data_validation import DataValidation
+from nasa.componenets.data_transformation import DataTransformation
+from nasa.componenets.model_trainer import ModelTrainer
 
 
 
@@ -35,7 +37,28 @@ class TrainPipeline:
         except Exception as e:
             raise SensorException(e, sys)
 
+    def start_data_transformation(self, data_validation_artifact:DataValidationArtifact):
+        try:
+            data_transformation_config = DataTransformationConfig(training_pipeline_config = self.training_pipeline_config)
+            data_transformation = DataTransformation(data_validation_artifact = data_validation_artifact, data_transformation_config = data_transformation_config)
+            data_transformation_artifact = data_transformation.inititate_data_transformation()
+            return data_transformation_artifact
+        except Exception as e:
+            raise SensorException(e, sys)
+    
+    def start_model_trainer(self, data_transformation_artifact:DataTransformationArtifact):
+        try:
+            model_trainer_config = ModelTrainerConfig(training_pipeline_config = self.training_pipeline_config)
+            model_trainer = ModelTrainer(model_trainer_config, data_transformation_artifact)
+            model_trainer_artifact = model_trainer.initiate_model_trainer()
+            return model_trainer_artifact
+        except Exception as e:
+            raise SensorException(e, sys)
+
+
     
     def run_pipeline(self):
         data_ingestion_artifact = self.start_data_ingestion()
         data_validation_artifact = self.start_data_validation(data_ingestion_artifact)
+        data_transformation_artifact = self.start_data_transformation(data_validation_artifact)
+        model_trainer_artifact = self.start_model_trainer(data_transformation_artifact)

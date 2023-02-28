@@ -36,7 +36,24 @@ class DataValidation:
                 return True
             return False 
         except Exception as e:
-            raise SensorException(e, sys)       
+            raise SensorException(e, sys) 
+         
+    def is_numerical_column_exist(self,dataframe:pd.DataFrame)->bool:
+        try:
+            numerical_columns = self._schema_config["numerical_columns"]
+            dataframe_columns = dataframe.columns
+
+            numerical_column_present = True
+            missing_numerical_columns = []
+            for num_column in numerical_columns:
+                if num_column not in dataframe_columns:
+                    numerical_column_present=False
+                    missing_numerical_columns.append(num_column)
+            
+            logging.info(f"Missing numerical columns: [{missing_numerical_columns}]")
+            return numerical_column_present
+        except Exception as e:
+            raise SensorException(e,sys)         
 
     def initiate_data_validation(self):
         try:
@@ -55,6 +72,15 @@ class DataValidation:
             status = self.validate_number_of_columns(dataframe = test_dataframe)
             if not status:
                 error_message = f"{error_message}test dataframe doesnot contain all columns. \n"
+
+            #validate numerical columns
+            status = self.is_numerical_column_exist(dataframe=train_dataframe)
+            if not status:
+                error_message=f"{error_message}Train dataframe does not contain all numerical columns.\n"
+            
+            status = self.is_numerical_column_exist(dataframe=test_dataframe)
+            if not status:
+                error_message=f"{error_message}Test dataframe does not contain all numerical columns.\n"
             
             if len(error_message)>0:
                 raise Exception(error_message)
