@@ -33,13 +33,32 @@ DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR: str = "transformed"
 DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR: str = "transformed_object"
 
 PREPROCSSING_OBJECT_FILE_NAME = "preprocessing.pkl"
+#PREPROCSSING_OBJECT_FILE_NAME = "preprocessing.joblib"
 
 """
 Model Trainer ralated constant start with MODE TRAINER VAR NAME
 """
 MODEL_TRAINER_DIR_NAME: str = "model_trainer"
 MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
-MODEL_FILE_NAME = "model.pkl"
-#MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
-#MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
-#MODEL_TRAINER_OVER_FIITING_UNDER_FITTING_THRESHOLD: float = 0.05
+MODEL_FILE_NAME:str = "model.pkl"
+MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
+#MODEL_FILE_NAME:str = "model.joblib"
+#MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.joblib"
+MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
+MODEL_TRAINER_OVER_FIITING_UNDER_FITTING_THRESHOLD: float = 0.10
+
+"""
+Model Evaluation ralated constant start with MODE TRAINER VAR NAME
+"""
+TARGET_COLUMN = "RUL"
+MODEL_EVALUATION_DIR_NAME: str = "model_evaluation"
+MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE: float = 0.02
+MODEL_EVALUATION_REPORT_NAME= "report.yaml" 
+
+
+"""
+Model Pusher ralated constant
+"""
+SAVED_MODEL_DIR =os.path.join("saved_models")
+MODEL_PUSHER_DIR_NAME = "model_pusher"
+MODEL_PUSHER_SAVED_MODEL_DIR = SAVED_MODEL_DIR

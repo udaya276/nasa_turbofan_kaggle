@@ -80,11 +80,19 @@ class DataTransformation:
             logging.info("Check5")
 
             #concat input and target data
-            final_train_df = pd.concat([transformed_input_train_feature, target_feature_train_df], axis=1)
-            final_test_df = pd.concat([transformed_input_test_feature, target_feature_test_df], axis=1)
+            index_names = ['unit_number', 'time_cycles']
+            setting_names = ['setting_1', 'setting_2', 'setting_3']
+            sensor_names = ['Fan inlet temperature', 'LPC outlet temperature', 'HPC outlet temperature', 'LPT outlet temperature', 
+            'Fan inlet Pressure', 'bypass-duct pressure', 'HPC outlet pressure', 'Physical fan speed', 'Physical core speed', 'Engine pressure ratio', 'HPC outlet Static pressure',
+            'Ratio of fuel flow to Ps30', 'Corrected fan speed', 'Corrected core speed', 'Bypass Ratio', 'Burner fuel-air ratio', 'Bleed Enthalpy', 'Required fan speed', 'Required fan conversion speed',
+            'High-pressure turbines Cool air flow', 'Low-pressure turbines Cool air flow', 'RUL']
+            col_names = index_names + setting_names + sensor_names 
+            final_train_df = pd.concat([transformed_input_train_feature, target_feature_train_df], axis=1, names=col_names)
+            final_test_df = pd.concat([transformed_input_test_feature, target_feature_test_df], axis=1, names=col_names)
+            #logging.info(final_train_df.head(2))
             logging.info("Check6")
 
-            #save train and test dataframe to csv files
+            #save train and test dataframe to csv files  
             save_dataframe_to_csv( self.data_transformation_config.transformed_train_file_path, df=final_train_df)
             save_dataframe_to_csv( self.data_transformation_config.transformed_test_file_path, df=final_test_df)
             save_object( self.data_transformation_config.transformed_object_file_path, preprocessor_object)
