@@ -2,6 +2,18 @@ import os
 
 ARTIFACT_DIR: str = "artifact"
 PIPELINE_NAME: str = "nasa"
+RAW_DATA_DIR_NAME: str = 'raw_data'
+"""
+Data validation related constant start with DATA_VALIDATION_LOAD VAR NAME
+"""
+DATA_VALIDATED_DIR_NAME: str = "data_validation"
+ACCEPTED_DATA_DIR_NAME: str = "accepted"
+REJECTED_DATA_DIR_NAME:str = "rejected"
+"""
+Database related constant start with DATA_VALIDATION_LOAD VAR NAME
+"""
+DATA_PROCESSED_DIR_NAME: str = "data_processed"
+
 
 """
 Data Ingestion related constant start with DATA_INGESTION VAR NAME

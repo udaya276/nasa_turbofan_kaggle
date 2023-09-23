@@ -1,6 +1,0 @@
-[ 2023-01-29 09:04:20,633 ] 19 root - INFO - start of data ingestion
-[ 2023-01-29 09:04:20,633 ] 23 root - INFO - Start of exporting raw data from data folder into feature store
-[ 2023-01-29 09:04:20,634 ] 9 root - INFO - Start of reading raw data file
-[ 2023-01-29 09:04:20,818 ] 15 root - INFO - End of reading raw data file
-[ 2023-01-29 09:04:21,172 ] 34 root - INFO - End of exporting raw data from data folder into feature store
-[ 2023-01-29 09:04:21,172 ] 22 root - INFO - End of Data ingestion

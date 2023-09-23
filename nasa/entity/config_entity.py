@@ -8,6 +8,17 @@ class TrainingPipelineConfig:
         #pipeline name
         self.artifact_dir: str = os.path.join(training_pipeline.ARTIFACT_DIR, timestamp)
         self.timestamp: str = timestamp
+        self.raw_data_dir_path = training_pipeline.RAW_DATA_DIR_NAME
+
+class DataValidationConfig:
+    def __init__(self, training_pipeline_config:TrainingPipelineConfig):
+        self.data_validated_dir = os.path.join(training_pipeline_config.artifact_dir, training_pipeline.DATA_VALIDATED_DIR_NAME)
+        self.accepted_dir = os.path.join(self.data_validated_dir, training_pipeline.ACCEPTED_DATA_DIR_NAME)
+        self.rejected_dir = os.path.join(self.data_validated_dir, training_pipeline.REJECTED_DATA_DIR_NAME)
+
+class DatabaseInsertionConfig:
+    def __init__(self, training_pipeline_config:TrainingPipelineConfig):
+        self.data_processed_dir = os.path.join(training_pipeline_config.artifact_dir, training_pipeline.DATA_PROCESSED_DIR_NAME)        
 
 class DataIngestionConfig:
     def __init__(self, training_pipeline_config:TrainingPipelineConfig):
@@ -18,7 +29,7 @@ class DataIngestionConfig:
         self.train_test_split_ratio: float = training_pipeline.DATA_INGESTION_TRAIN_TEST_SPLIT_RATION
         self.collection_name: str = training_pipeline.DATA_INGESTION_COLLECTION_NAME
         self.raw_data_dir_path = "raw_data"
-
+"""    
 class DataValidationConfig:
     def __init__(self, training_pipeline_config:TrainingPipelineConfig):
         self.data_validation_dir: str = os.path.join(training_pipeline_config.artifact_dir, training_pipeline.DATA_VALIDATION_DIR_NAME)
@@ -28,7 +39,7 @@ class DataValidationConfig:
         self.valid_test_file_path: str = os.path.join(self.valid_data_dir, training_pipeline.TEST_FILE_NAME)
         self.invalid_train_file_path: str = os.path.join(self.invalid_data_dir, training_pipeline.TRAIN_FILE_NAME)
         self.invalid_test_file_path: str = os.path.join(self.invalid_data_dir, training_pipeline.TEST_FILE_NAME)       
-
+"""
 class DataTransformationConfig:
     def __init__(self, training_pipeline_config:TrainingPipelineConfig):
         self.data_transformation_dir: str = os.path.join(training_pipeline_config.artifact_dir, training_pipeline.DATA_TRANSFORMATION_DIR_NAME)

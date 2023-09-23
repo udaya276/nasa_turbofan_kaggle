@@ -1,12 +1,21 @@
 from dataclasses import dataclass
 
 @dataclass
+class DataValidationArtifact:
+    accepted_dir_path: str
+    rejected_dir_path: str
+
+@dataclass
+class DatabaseInsertionArtifact:
+    database_insertion_status: bool
+    
+@dataclass
 class DataIngestionArtifact:
     trained_file_path: str
     test_file_path: str
 
 @dataclass
-class DataValidationArtifact:
+class DataValidationArtifact11:
     validation_status: bool
     valid_train_file_path: str
     valid_test_file_path: str

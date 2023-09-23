@@ -6,12 +6,15 @@ from nasa.entity.artifact_entity import DataIngestionArtifact
 from nasa.data_access.nasa_data import Nasadata
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
-
+from nasa.constant.training_pipeline import SCHEMA_FILE_PATH
+from nasa.utils.main_utils import read_yaml_file
+from nasa.componenets.database_insertion import DatabaseInsetion
 
 class DataIngestion:
     def __init__(self, data_ingestion_config:DataIngestionConfig):
         try:
-            self.data_ingestion_config= data_ingestion_config
+            self.data_ingestion_config= data_ingestion_config                     
+            self.schema_config = read_yaml_file(SCHEMA_FILE_PATH)
         except Exception as e:
             raise SensorException(e, sys)
 
@@ -25,9 +28,10 @@ class DataIngestion:
         try:
             logging.info("Start of exporting raw data from data folder into feature store")
             nasadata = Nasadata()
-            dataframe = nasadata.export_raw_data_as_dataframe(raw_data_dir = self.data_ingestion_config.raw_data_dir_path)
+            session = nasadata.database_connect()
+            #dataframe = nasadata.export_raw_data_as_dataframe(raw_data_dir = self.data_ingestion_config.raw_data_dir_path)
+            dataframe = nasadata.export_raw_data_as_dataframe(session=session)            
             feature_store_file_path = self.data_ingestion_config.feature_store_file_path
-
             #creating directory
             dir_path = os.path.dirname(feature_store_file_path)
             os.makedirs(dir_path)
@@ -65,10 +69,15 @@ class DataIngestion:
         pass
     def initiate_data_ingestion(self) -> DataIngestionArtifact:
         try:
-            dataframe = self.export_raw_data_into_feature_store()
-            self.split_data_as_train_test(dataframe = dataframe)
-            data_ingestion_artifact = DataIngestionArtifact(trained_file_path = self.data_ingestion_config.training_file_path, test_file_path=self.data_ingestion_config.testing_file_path)
-            return data_ingestion_artifact
+            if DatabaseInsetion.database_insertion_status:
+                dataframe = self.export_raw_data_into_feature_store()
+                dataframe = dataframe.drop(self.schema_config["drop_columns"],axis=1)
+                self.split_data_as_train_test(dataframe = dataframe)                        
+                data_ingestion_artifact = DataIngestionArtifact(trained_file_path = self.data_ingestion_config.training_file_path, 
+                                                            test_file_path=self.data_ingestion_config.testing_file_path)
+                return data_ingestion_artifact
+            else:
+                logging.info("No new data file inserted in database")        
         except Exception as e:
             return SensorException(e, sys)
         

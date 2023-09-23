@@ -10,6 +10,7 @@ from nasa.utils.main_utils import load_object
 import pandas as pd
 from fastapi import File
 from io import BytesIO
+import pickle
 
 
 
@@ -41,7 +42,29 @@ async def train_route():
         return Response("Training successful !!")
     except Exception as e:
         return Response(f"Error Occured! {e}")
-  
+    
+@app.post("/upload_file/")
+async def upload_file(csv_file:UploadFile = File(...)):
+    try:
+        train_df = pd.read_csv(csv_file.file)
+        x_train = train_df.iloc[:, :-1]
+        #print(x_train.head())
+        model_resolver = ModelResolver(model_dir = SAVED_MODEL_DIR)
+        if not model_resolver.is_model_exists():
+            return Response("Model is not available")
+
+        best_model_path = model_resolver.get_best_model_path()
+        loaded_model = load_object(file_path=best_model_path)
+        result = list(loaded_model.predict(x_train))
+        return result
+
+        #filename = 'savedmodel123.sav'
+        #loaded_model = pickle.load(open(filename, 'rb'))
+        #result = list(loaded_model.predict(x_train))
+        #return result
+    except Exception as e:
+        return Response(f"Error occured! {e}")
+"""  
 @app.post("/uploadfile_predict/")
 async def upload_csv_file(file: UploadFile = File(...)):
     try:
@@ -62,7 +85,7 @@ async def upload_csv_file(file: UploadFile = File(...)):
         return df["RUL"]
     except Exception as e:
         return Response(f"Error occured! {e}")
-
+"""
 
 if __name__=="__main__":
     #training_pipeline = TrainPipeline()

@@ -2,15 +2,15 @@ from nasa.logger import logging
 from nasa.exception import SensorException
 import os, sys
 import pandas as pd
-from nasa.entity.artifact_entity import DataValidationArtifact, DataTransformationArtifact
+from nasa.entity.artifact_entity import DataIngestionArtifact, DataTransformationArtifact
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import MinMaxScaler
 from nasa.entity.config_entity import DataTransformationConfig
 from nasa.utils.main_utils import save_dataframe_to_csv, save_object
 class DataTransformation:
-    def __init__(self, data_validation_artifact:DataValidationArtifact, data_transformation_config: DataTransformationConfig):
+    def __init__(self, data_ingestion_artifact:DataIngestionArtifact, data_transformation_config: DataTransformationConfig):
         try:
-            self.data_validation_artifact = data_validation_artifact
+            self.data_ingestion_artifact = data_ingestion_artifact
             self.data_transformation_config = data_transformation_config
         except Exception as e:
             raise SensorException(e, sys)
@@ -52,8 +52,8 @@ class DataTransformation:
 
     def inititate_data_transformation(self) -> DataTransformationArtifact:
         try:
-            train_df = DataTransformation.read_data(self.data_validation_artifact.valid_train_file_path)
-            test_df = DataTransformation.read_data(self.data_validation_artifact.valid_test_file_path)
+            train_df = DataTransformation.read_data(self.data_ingestion_artifact.trained_file_path)
+            test_df = DataTransformation.read_data(self.data_ingestion_artifact.test_file_path)
             preprocessor = self.get_data_transformer_object()
 
             #training dataframe
