@@ -141,7 +141,7 @@ class TrainPipeline:
             self.sync_saved_model_dir_to_s3()
             logging.info("check s3 completed")
         except Exception as e:
-            #self.sync_artifact_dir_to_s3()
+            self.sync_artifact_dir_to_s3()
             TrainPipeline.is_pipeline_running = False
             raise SensorException(e, sys)
 
