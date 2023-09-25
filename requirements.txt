@@ -10,4 +10,3 @@ joblib==1.2.0
 Flask==2.3.2
 cassandra-driver==3.27.0
 pytest-shutil==1.7.0
--e .
