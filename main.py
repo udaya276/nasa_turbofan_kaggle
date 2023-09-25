@@ -90,4 +90,4 @@ async def upload_csv_file(file: UploadFile = File(...)):
 if __name__=="__main__":
     #training_pipeline = TrainPipeline()
     #training_pipeline.run_pipeline()
-    uvicorn.run(app, host='127.0.0.1', port=8080)
+    app.run(app, host='127.0.0.1', port=8080)
