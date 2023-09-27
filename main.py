@@ -3,7 +3,6 @@ from fastapi import FastAPI, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
 from fastapi.responses import Response
-import uvicorn
 from nasa.ml.estimator import ModelResolver
 from nasa.constant.training_pipeline import SAVED_MODEL_DIR
 from nasa.utils.main_utils import load_object
@@ -11,12 +10,13 @@ import pandas as pd
 from fastapi import File
 from io import BytesIO
 import pickle
+from uvicorn import run as app_run
 
 
 
 
 app = FastAPI()
-"""
+
 origins = ["*"]
 
 app.add_middleware(
@@ -26,7 +26,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-"""
+
 @app.get("/", tags=["authentication"])
 async def index():
     #return {"App started"}
@@ -90,4 +90,5 @@ async def upload_csv_file(file: UploadFile = File(...)):
 if __name__=="__main__":
     #training_pipeline = TrainPipeline()
     #training_pipeline.run_pipeline()
-    app.run(app, host='127.0.0.1', port=8080)
+    #uvicorn.run(app, host='127.0.0.1', port=8080)
+    app_run(app, host='0.0.0.0', port=8080)
